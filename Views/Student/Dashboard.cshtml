@@ -1,0 +1,197 @@
+@model BlindMatchPAS.Models.ViewModels.StudentDashboardViewModel
+@{
+    ViewData["Title"] = "My Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Welcome back, <span class="accent-text">@Model.StudentName</span></h1>
+        <p class="page-subtitle">Track your project proposals and supervision matches.</p>
+    </div>
+    <a asp-controller="Student" asp-action="Submit" class="btn-primary">
+        + New Proposal
+    </a>
+</div>
+
+<!-- Stat Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">@Model.TotalProjects</div>
+        <div class="stat-label">Total Projects</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" style="color:#a0aec0">@Model.PendingCount</div>
+        <div class="stat-label">Pending</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" style="color:#f59e0b">@Model.UnderReviewCount</div>
+        <div class="stat-label">Under Review</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number" style="color:#22c55e">@Model.MatchedCount</div>
+        <div class="stat-label">Matched</div>
+    </div>
+</div>
+
+<!-- Projects Table -->
+<div class="content-card" style="margin-top:2rem">
+    <div class="card-header">
+        <h2 class="card-title">My Project Proposals</h2>
+    </div>
+
+    @if (!Model.Projects.Any())
+    {
+        <div class="empty-state">
+            <div class="empty-icon">📄</div>
+            <p class="empty-title">No projects yet</p>
+            <p class="empty-desc">Submit your first project proposal to get started.</p>
+            <a asp-controller="Student" asp-action="Submit" class="btn-primary">
+                Submit a Proposal
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Project Title</th>
+                        <th>Research Area</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in Model.Projects)
+                    {
+                        <tr>
+                            <td>
+                                <div class="project-title">@project.Title</div>
+                            </td>
+                            <td>
+                                <span class="area-badge">@project.ResearchArea</span>
+                            </td>
+                            <td style="color:#aaaaaa; font-size:13px; opacity:1;">
+                                @project.SubmittedAt.ToString("dd MMM yyyy")
+                            </td>
+                            <td>
+                                @switch (project.Status)
+                                {
+                                    case BlindMatchPAS.Models.ProjectStatus.Pending:
+                                        <span class="status-badge status-pending">Pending</span>
+                                        break;
+                                    case BlindMatchPAS.Models.ProjectStatus.UnderReview:
+                                        <span class="status-badge status-review">Under Review</span>
+                                        break;
+                                    case BlindMatchPAS.Models.ProjectStatus.Matched:
+                                        <span class="status-badge status-matched">Matched</span>
+                                        break;
+                                    case BlindMatchPAS.Models.ProjectStatus.Withdrawn:
+                                        <span class="status-badge status-withdrawn">Withdrawn</span>
+                                        break;
+                                }
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    @if (project.Status == BlindMatchPAS.Models.ProjectStatus.Pending ||
+                                         project.Status == BlindMatchPAS.Models.ProjectStatus.UnderReview)
+                                    {
+                                        <a asp-controller="Student"
+                                           asp-action="Edit"
+                                           asp-route-id="@project.ProjectId"
+                                           class="btn-sm btn-outline">Edit</a>
+
+                                        <form asp-controller="Student"
+                                              asp-action="Withdraw"
+                                              method="post"
+                                              style="display:inline"
+                                              onsubmit="return confirm('Are you sure you want to withdraw this project?')">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="projectId" value="@project.ProjectId" />
+                                            <button type="submit" class="btn-sm btn-danger">Withdraw</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted" style="font-size:12px">No actions</span>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+
+                        @* Reveal Card — shown only when IsRevealed = true *@
+                        @if (project.IsRevealed && project.RevealedMatch != null)
+                        {
+                            <tr style="background:var(--bg-base)">
+                                <td colspan="5" style="padding: .25rem 1.75rem 1rem; border-top: none;">
+                                    <div class="reveal-card">
+                                        <div class="reveal-header">
+                                            <span class="reveal-icon">🎉</span>
+                                            <span class="reveal-title">Identity Revealed — Your Supervisor</span>
+                                        </div>
+                                        <div class="reveal-body">
+                                            <div class="reveal-item">
+                                                <span class="reveal-label">Name</span>
+                                                <span class="reveal-value">@project.RevealedMatch.SupervisorFullName</span>
+                                            </div>
+                                            <div class="reveal-item">
+                                                <span class="reveal-label">Email</span>
+                                                <a href="mailto:@project.RevealedMatch.SupervisorEmail"
+                                                   class="reveal-value accent-text">
+                                                    @project.RevealedMatch.SupervisorEmail
+                                                </a>
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(project.RevealedMatch.SupervisorDepartment))
+                                            {
+                                                <div class="reveal-item">
+                                                    <span class="reveal-label">Department</span>
+                                                    <span class="reveal-value">@project.RevealedMatch.SupervisorDepartment</span>
+                                                </div>
+                                            }
+                                            <div class="reveal-item">
+                                                <span class="reveal-label">Matched on</span>
+                                                <span class="reveal-value">
+                                                    @project.RevealedMatch.RevealedAt.ToString("dd MMM yyyy, hh:mm tt")
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                        @* Activity Timeline *@
+                        <tr>
+                            <td colspan="5" style="padding: 0 1.5rem 1rem;">
+                                <div class="timeline">
+                                    <div class="timeline-item timeline-done">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-label">Submitted</span>
+                                            <span class="timeline-date">@project.SubmittedAt.ToString("dd MMM yyyy")</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item @(project.Status >= BlindMatchPAS.Models.ProjectStatus.UnderReview ? "timeline-done" : "timeline-pending")">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-label">Under Review</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item @(project.Status == BlindMatchPAS.Models.ProjectStatus.Matched ? "timeline-done" : "timeline-pending")">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-label">Matched</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

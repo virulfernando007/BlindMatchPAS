@@ -1,0 +1,192 @@
+@model BlindMatchPAS.Models.ViewModels.ProjectSubmissionViewModel
+@{
+    ViewData["Title"] = "Submit Project Proposal";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Submit a <span class="accent-text">Project Proposal</span></h1>
+        <p class="page-subtitle">Fill in all details carefully. You can edit this before it gets matched.</p>
+    </div>
+    <a asp-controller="Student" asp-action="Dashboard" class="btn-outline">← Back</a>
+</div>
+
+<form asp-controller="Student" asp-action="Submit" method="post"
+      enctype="multipart/form-data" id="submitForm">
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="validation-summary" style="max-width:1100px;margin-bottom:1.5rem"></div>
+
+    <!-- Two column layout -->
+    <div class="submit-grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="submit-col">
+
+            <div class="form-section-card">
+                <div class="form-section-title">Project Details</div>
+
+                <div class="form-group">
+                    <label asp-for="Title" class="form-label">Project Title <span class="required">*</span></label>
+                    <input asp-for="Title" class="form-input"
+                           placeholder="e.g. AI-Powered Fraud Detection System" />
+                    <span asp-validation-for="Title" class="field-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ShortDescription" class="form-label">
+                        Short Description <span class="required">*</span>
+                    </label>
+                    <input asp-for="ShortDescription" class="form-input"
+                           placeholder="One sentence summary — this is what supervisors see first"
+                           maxlength="150" />
+                    <span asp-validation-for="ShortDescription" class="field-error"></span>
+                    <span class="form-hint">Max 150 characters.</span>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0">
+                    <label asp-for="Abstract" class="form-label">Abstract <span class="required">*</span></label>
+                    <textarea asp-for="Abstract" class="form-input form-textarea" rows="7"
+                              placeholder="Describe your project idea, objectives, methodology, and expected outcomes..."></textarea>
+                    <span asp-validation-for="Abstract" class="field-error"></span>
+                    <span class="form-hint">Between 50 and 2000 characters.</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="submit-col">
+
+            <!-- Research Areas -->
+            <div class="form-section-card">
+                <div class="form-section-title">Research Areas <span class="required">*</span></div>
+                <p class="form-hint" style="margin-bottom:.85rem">Type to search or scroll to select. Pick one or more.</p>
+
+                <!-- Search input -->
+                <div style="position:relative;margin-bottom:.75rem">
+                    <input type="text" id="areaSearch" class="form-input"
+                           placeholder="Search research areas..." autocomplete="off" />
+                </div>
+
+                <!-- Scrollable checkbox list -->
+                <div class="area-select-list" id="areaList">
+                    @foreach (var area in Model.ResearchAreas)
+                    {
+                        <label class="area-select-item" data-name="@area.Name.ToLower()">
+                            <input type="checkbox"
+                                   name="SelectedResearchAreaIds"
+                                   value="@area.Id"
+                                   class="area-checkbox" />
+                            <span class="area-select-check">
+                                <svg width="11" height="9" viewBox="0 0 11 9" fill="none">
+                                    <path d="M1 4L4 7.5L10 1" stroke="white" stroke-width="2"
+                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                            <span class="area-select-name">@area.Name</span>
+                        </label>
+                    }
+                </div>
+
+                <!-- Selected tags preview -->
+                <div class="selected-tags" id="selectedTags" style="margin-top:.75rem;display:none">
+                    <div style="font-size:11px;color:var(--text-muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.06em">Selected</div>
+                    <div id="tagList" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+                </div>
+
+                <span asp-validation-for="SelectedResearchAreaIds" class="field-error"></span>
+            </div>
+
+            <!-- File Upload -->
+            <div class="form-section-card" style="margin-top:1rem">
+                <div class="form-section-title">Supporting Documents</div>
+                <p class="form-hint" style="margin-bottom:.85rem">PDF, Word, ZIP, PNG, JPG — max 10MB each</p>
+
+                <div class="file-list" id="fileList"></div>
+
+                <button type="button" class="file-add-btn" id="fileAddBtn"
+                        onclick="document.getElementById('fileInput').click()">
+                    <span class="file-add-icon">+</span>
+                    <span>Add file</span>
+                </button>
+                <input type="file" name="AttachmentFile" id="fileInput"
+                       accept=".pdf,.doc,.docx,.zip,.png,.jpg"
+                       style="display:none" onchange="addFile(this)" />
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Submit bar -->
+    <div class="submit-bar">
+        <a asp-controller="Student" asp-action="Dashboard" class="btn-outline">Cancel</a>
+        <button type="submit" class="btn-primary" id="submitBtn">
+            Submit Proposal
+        </button>
+    </div>
+
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // ── Research area search ───────────────────────────
+        const searchInput = document.getElementById('areaSearch');
+        const items = document.querySelectorAll('.area-select-item');
+
+        searchInput.addEventListener('input', function () {
+            const q = this.value.toLowerCase();
+            items.forEach(item => {
+                item.style.display = item.dataset.name.includes(q) ? 'flex' : 'none';
+            });
+        });
+
+        // ── Selected tags preview ──────────────────────────
+        function updateTags() {
+            const tagList  = document.getElementById('tagList');
+            const tagsWrap = document.getElementById('selectedTags');
+            const checked  = document.querySelectorAll('.area-checkbox:checked');
+            tagList.innerHTML = '';
+            if (checked.length > 0) {
+                tagsWrap.style.display = 'block';
+                checked.forEach(cb => {
+                    const name = cb.closest('.area-select-item')
+                                   .querySelector('.area-select-name').textContent;
+                    const tag = document.createElement('span');
+                    tag.className = 'selected-area-tag';
+                    tag.textContent = name;
+                    tagList.appendChild(tag);
+                });
+            } else {
+                tagsWrap.style.display = 'none';
+            }
+        }
+
+        document.querySelectorAll('.area-checkbox').forEach(cb => {
+            cb.addEventListener('change', updateTags);
+        });
+
+        // ── File list ──────────────────────────────────────
+        function addFile(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            const list = document.getElementById('fileList');
+
+            const ext  = file.name.split('.').pop().toUpperCase();
+            const size = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+
+            const row = document.createElement('div');
+            row.className = 'file-row';
+            row.innerHTML = `
+                <span class="file-ext-badge">${ext}</span>
+                <span class="file-row-name">${file.name}</span>
+                <span class="file-row-size">${size}</span>
+                <button type="button" class="file-row-remove" onclick="this.closest('.file-row').remove()">✕</button>
+            `;
+            list.appendChild(row);
+            input.value = '';
+        }
+    </script>
+}

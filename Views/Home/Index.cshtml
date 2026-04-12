@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+    Layout = "_Layout";
+}
+
+<div style="min-height:80vh;display:flex;align-items:center;justify-content:center;text-align:center;">
+    <div>
+        <h1 style="font-size:48px;font-weight:800;color:var(--text-primary)">
+            BlindMatch<span style="color:var(--accent)">.</span>PAS
+        </h1>
+        <p style="color:var(--text-secondary);font-size:18px;margin-top:1rem;margin-bottom:2rem">
+            Fair. Merit-based. Anonymous.
+        </p>
+        <a asp-controller="Account" asp-action="Login" class="btn-primary" style="font-size:15px;padding:12px 32px">
+            Get Started
+        </a>
+    </div>
+</div>

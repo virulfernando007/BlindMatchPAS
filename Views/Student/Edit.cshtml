@@ -1,0 +1,103 @@
+@model BlindMatchPAS.Models.ViewModels.ProjectSubmissionViewModel
+@{
+    ViewData["Title"] = "Edit Project Proposal";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Edit <span class="accent-text">Project Proposal</span></h1>
+        <p class="page-subtitle">Update your project details before it gets matched.</p>
+    </div>
+    <a asp-controller="Student" asp-action="Dashboard" class="btn-outline">← Back</a>
+</div>
+
+<div class="form-card" style="max-width:780px">
+    <form asp-controller="Student" asp-action="Edit" method="post"
+          enctype="multipart/form-data" id="editForm">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div asp-validation-summary="All" class="validation-summary"></div>
+
+        <!-- Title -->
+        <div class="form-group">
+            <label asp-for="Title" class="form-label">Project Title <span class="required">*</span></label>
+            <input asp-for="Title" class="form-input" placeholder="e.g. AI-Powered Fraud Detection System" />
+            <span asp-validation-for="Title" class="field-error"></span>
+        </div>
+
+        <!-- Short Description -->
+        <div class="form-group">
+            <label asp-for="ShortDescription" class="form-label">Short Description <span class="required">*</span></label>
+            <input asp-for="ShortDescription" class="form-input"
+                   placeholder="One sentence summary (max 150 chars)" maxlength="150" />
+            <span asp-validation-for="ShortDescription" class="field-error"></span>
+        </div>
+
+        <!-- Project Type -->
+        <div class="form-group">
+            <label class="form-label">Project Type <span class="required">*</span></label>
+            <div style="display:flex;gap:1rem;margin-top:.4rem">
+                <label class="type-option" id="typeIndividual">
+                    <input type="radio" asp-for="ProjectType" value="0" style="display:none" />
+                    <span class="type-icon">👤</span>
+                    <span class="type-label">Individual</span>
+                </label>
+                <label class="type-option" id="typeGroup">
+                    <input type="radio" asp-for="ProjectType" value="1" style="display:none" />
+                    <span class="type-icon">👥</span>
+                    <span class="type-label">Group</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Research Areas -->
+        <div class="form-group">
+            <label class="form-label">Research Areas <span class="required">*</span></label>
+            <span class="form-hint" style="margin-bottom:.75rem;display:block">Select one or more areas.</span>
+            <div class="research-area-grid">
+                @foreach (var area in Model.ResearchAreas)
+                {
+                    <label class="area-checkbox-item">
+                        <input type="checkbox"
+                               name="SelectedResearchAreaIds"
+                               value="@area.Id"
+                               class="area-checkbox"
+                               @(Model.SelectedResearchAreaIds.Contains(area.Id) ? "checked" : "") />
+                        <span class="area-check-label">@area.Name</span>
+                    </label>
+                }
+            </div>
+            <span asp-validation-for="SelectedResearchAreaIds" class="field-error"></span>
+        </div>
+
+        <!-- Abstract -->
+        <div class="form-group">
+            <label asp-for="Abstract" class="form-label">Abstract <span class="required">*</span></label>
+            <textarea asp-for="Abstract" class="form-input form-textarea" rows="6"
+                      placeholder="Describe your project idea, objectives, and expected outcomes..."></textarea>
+            <span asp-validation-for="Abstract" class="field-error"></span>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+            <a asp-controller="Student" asp-action="Dashboard" class="btn-outline">Cancel</a>
+            <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.querySelectorAll('.type-option input').forEach(radio => {
+            radio.addEventListener('change', () => {
+                document.querySelectorAll('.type-option').forEach(o => o.classList.remove('selected'));
+                radio.closest('.type-option').classList.add('selected');
+            });
+        });
+        const checked = document.querySelector('.type-option input:checked');
+        if (checked) checked.closest('.type-option').classList.add('selected');
+    </script>
+}
