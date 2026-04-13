@@ -2,7 +2,6 @@
 
 namespace BlindMatchPAS.Controllers
 {
-    using System.Collections.Generic;
     public class ModuleLeaderController : Controller
     {
         public IActionResult Dashboard()
@@ -15,18 +14,16 @@ namespace BlindMatchPAS.Controllers
             return View();
         }
 
-
-
-        public IActionResult Users()
+        public IActionResult Projects()
         {
-            var users = new List<object>
+            var projects = new List<dynamic>
             {
-                new { Name = "Alice", Role = "Student" },
-                new { Name = "Bob", Role = "Supervisor" },
-                new { Name = "Charlie", Role = "Student" }
+                new { Title = "AI System", Status = "Pending" },
+                new { Title = "Web App", Status = "Approved" },
+                new { Title = "Mobile App", Status = "Pending" }
             };
-            return View(users);
+
+            return View(projects);
         }
     }
-
 }
