@@ -1,28 +1,28 @@
 ﻿<h2>All Projects</h2>
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Title</th>
-        <th>Status</th>
-        <th>Action</th>
+<table style="width:100%; border-collapse: collapse; margin-top:20px;">
+    <tr style="background-color:#222; color:white;">
+        <th style="padding:10px;">Title</th>
+        <th style="padding:10px;">Status</th>
+        <th style="padding:10px;">Action</th>
     </tr>
 
     @foreach (var project in Model)
     {
-        <tr>
-            <td>@project.Title</td>
-            <td>@project.Status</td>
+        <tr style="text-align:center; border-bottom:1px solid #444;">
+            <td style="padding:10px;">@project.Title</td>
+            <td style="padding:10px;">@project.Status</td>
 
-            <td>
+            <td style="padding:10px;">
                 @if (project.Status == "Pending")
                 {
-                    <a href="/ModuleLeader/Approve?title=@project.Title">Approve</a>
+                    <a href="/ModuleLeader/Approve?title=@project.Title" style="color:#4CAF50;">Approve</a>
                     <span> | </span>
-                    <a href="/ModuleLeader/Reject?title=@project.Title">Reject</a>
+                    <a href="/ModuleLeader/Reject?title=@project.Title" style="color:#f44336;">Reject</a>
                 }
                 else
                 {
-                    <span>-</span>
+                    <span style="color:gray;">-</span>
                 }
             </td>
         </tr>
