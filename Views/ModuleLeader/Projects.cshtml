@@ -4,6 +4,7 @@
     <tr>
         <th>Title</th>
         <th>Status</th>
+        <th>Action</th>
     </tr>
 
     @foreach (var project in Model)
@@ -11,6 +12,10 @@
         <tr>
             <td>@project.Title</td>
             <td>@project.Status</td>
+            <td>
+                <a href="/ModuleLeader/Approve?title=@project.Title">Approve</a> |
+                <a href="/ModuleLeader/Reject?title=@project.Title">Reject</a>
+            </td>
         </tr>
     }
 </table>

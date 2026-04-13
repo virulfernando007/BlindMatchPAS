@@ -25,5 +25,14 @@ namespace BlindMatchPAS.Controllers
 
             return View(projects);
         }
+        public IActionResult Approve(string title)
+        {
+            return Content($"Project {title} Approved");
+        }
+
+        public IActionResult Reject(string title)
+        {
+            return Content($"Project {title} Rejected");
+        }
     }
 }
