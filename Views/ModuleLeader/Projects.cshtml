@@ -1,0 +1,16 @@
+﻿<h2>All Projects</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Title</th>
+        <th>Status</th>
+    </tr>
+
+    @foreach (var project in Model)
+    {
+        <tr>
+            <td>@project.Title</td>
+            <td>@project.Status</td>
+        </tr>
+    }
+</table>
