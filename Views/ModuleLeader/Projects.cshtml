@@ -10,11 +10,9 @@
     @foreach (var project in Model)
     {
         <tr>
-            <!-- ✅ ADD THESE BACK -->
             <td>@project.Title</td>
             <td>@project.Status</td>
 
-            <!-- ✅ ACTION COLUMN -->
             <td>
                 @if (project.Status == "Pending")
                 {
