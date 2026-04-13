@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BlindMatchPAS.Data;
+﻿using BlindMatchPAS.Data;
+using BlindMatchPAS.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlindMatchPAS.Controllers
@@ -18,7 +19,7 @@ namespace BlindMatchPAS.Controllers
             var totalProjects = await _context.Projects.CountAsync();
             var totalMatches = await _context.Matches.CountAsync();
             var pendingProjects = await _context.Projects
-                .Where(p => p.Status == "Pending")
+                .Where(p => p.Status == ProjectStatus.Pending)
                 .CountAsync();
             var totalUsers = await _context.Users.CountAsync();
 
