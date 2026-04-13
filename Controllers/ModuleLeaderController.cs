@@ -1,34 +1,11 @@
-﻿using BlindMatchPAS.Data;
-using BlindMatchPAS.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace BlindMatchPAS.Controllers
+public IActionResult Dashboard()
 {
-    public class ModuleLeaderController : Controller
-    {
-        private readonly ApplicationDbContext _context;
+    ViewBag.TotalProjects = 10;
+    ViewBag.TotalMatches = 5;
+    ViewBag.PendingProjects = 3;
+    ViewBag.TotalUsers = 20;
 
-        public ModuleLeaderController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task<IActionResult> Dashboard()
-        {
-            var totalProjects = await _context.Projects.CountAsync();
-            var totalMatches = await _context.Matches.CountAsync();
-            var pendingProjects = await _context.Projects
-                .Where(p => p.Status == ProjectStatus.Pending)
-                .CountAsync();
-            var totalUsers = await _context.Users.CountAsync();
-
-            ViewBag.TotalProjects = totalProjects;
-            ViewBag.TotalMatches = totalMatches;
-            ViewBag.PendingProjects = pendingProjects;
-            ViewBag.TotalUsers = totalUsers;
-
-            return View();
-        }
-    }
+    return View();
 }
