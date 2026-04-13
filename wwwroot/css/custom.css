@@ -891,3 +891,269 @@ html, body {
 }
 [data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg-base); }
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: #c4c4d4; }
+
+
+
+/* --- ADMIN MODULE STYLES (Arimac Theme) --- */
+
+/* Import Inter Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Base Variables (Dark Theme by Default) */
+:root {
+    /* Backgrounds */
+    --bg-base: #080c14;         
+    --bg-surface: #0f1623;      
+    --bg-elevated: #161d2e;     
+    --bg-hover: #1e2a3d;        
+
+    /* Accent */
+    --accent: #c8ff00;          
+    --accent-hover: #b0e000;    
+    --accent-dark: #0f1a00;     
+    --accent-text: #080c14;     
+
+    /* Text */
+    --text-primary: #ffffff;    
+    --text-secondary: #a0aec0;  
+    --text-muted: #4a5568;      
+
+    /* Borders */
+    --border: #1e2a3d;          
+    --border-active: #c8ff00;   
+
+    /* Semantic */
+    --success: #22c55e;         
+    --warning: #f59e0b;         
+    --danger: #ef4444;          
+    --info: #3b82f6;            
+
+    /* Typography */
+    --font-base: 'Inter', sans-serif;
+}
+
+/* Light Theme Overrides (Triggered via JS) */
+[data-theme="light"] {
+    --bg-base: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-elevated: #f1f5f9;
+    --bg-hover: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border: #e2e8f0;
+}
+
+body {
+    font-family: var(--font-base);
+    background-color: var(--bg-base);
+    color: var(--text-secondary);
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* --- Layout Components --- */
+
+.sidebar {
+    width: 240px;
+    background-color: var(--bg-base);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-link {
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding: 12px 20px;
+    display: block;
+    text-decoration: none;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+
+.sidebar-link:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.sidebar-link.active {
+    color: var(--accent);
+    border-left: 3px solid var(--accent);
+    background-color: var(--bg-hover);
+}
+
+.main-content {
+    flex-grow: 1;
+    margin-left: 240px;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-navbar {
+    height: 64px;
+    background-color: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+.logo-text {
+    color: var(--text-primary);
+    font-weight: 800;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.logo-dot {
+    color: var(--accent);
+}
+
+/* --- UI Elements --- */
+
+.custom-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+.custom-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.stat-card {
+    border-left: 3px solid var(--accent);
+}
+
+.stat-number {
+    color: var(--accent);
+    font-size: 36px;
+    font-weight: 800;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+}
+
+/* --- Buttons & Inputs --- */
+
+.btn-primary-custom {
+    background-color: var(--accent);
+    color: var(--accent-text);
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 600;
+    border: none;
+    transition: all 0.15s ease;
+}
+
+.btn-primary-custom:hover {
+    background-color: var(--accent-hover);
+    transform: scale(1.02);
+}
+
+.form-control-custom {
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 8px;
+    padding: 10px 14px;
+    width: 100%;
+}
+
+.form-control-custom:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(200,255,0,0.1);
+}
+
+/* --- Tables & Badges --- */
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.custom-table th {
+    background-color: var(--bg-elevated);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    padding: 12px;
+    text-align: left;
+}
+
+.custom-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+}
+
+.custom-table tr:hover {
+    background-color: var(--bg-hover);
+}
+
+.role-badge {
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    display: inline-block;
+}
+.role-admin { background: #1a0000; color: #ef4444; }
+.role-student { background: #0d1f3c; color: #3b82f6; }
+.role-supervisor { background: #1a0d3c; color: #8b5cf6; }
+.role-leader { background: #1a1200; color: #f59e0b; }
+
+/* --- Toast System --- */
+#toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.custom-toast {
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    border-left: 4px solid var(--info);
+}
+
+.custom-toast.show { transform: translateX(0); }
+.custom-toast.success { border-left-color: var(--success); }
+.custom-toast.error { border-left-color: var(--danger); }
+
+/* --- Scrollbar & Animations --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+@keyframes fadeInUp { 
+  from { opacity: 0; transform: translateY(16px); } 
+  to   { opacity: 1; transform: translateY(0); } 
+}

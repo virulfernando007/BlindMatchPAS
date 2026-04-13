@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 text-white fw-bold">System Overview</h1>
+        <span class="badge bg-primary">Live Data</span>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card bg-dark border-0 shadow-sm" style="border-left: 4px solid #bbf706 !Value;">
+                <div class="card-body p-4">
+                    <h6 class="text-uppercase text-muted small fw-bold">Total Students</h6>
+                    <h2 class="text-white mb-0 mt-2">@ViewBag.TotalStudents</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-dark border-0 shadow-sm" style="border-left: 4px solid #bbf706 !Value;">
+                <div class="card-body p-4">
+                    <h6 class="text-uppercase text-muted small fw-bold">Supervisors</h6>
+                    <h2 class="text-white mb-0 mt-2">@ViewBag.TotalSupervisors</h2>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card bg-dark border-0 shadow-sm" style="border-left: 4px solid #bbf706 !Value;">
+                <div class="card-body p-4">
+                    <h6 class="text-uppercase text-muted small fw-bold">Module Leaders</h6>
+                    <h2 class="text-white mb-0 mt-2">@ViewBag.TotalLeaders</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-dark border-0 shadow-sm" style="border-left: 4px solid #bbf706 !Value;">
+                <div class="card-body p-4">
+                    <h6 class="text-uppercase text-muted small fw-bold">System Admins</h6>
+                    <h2 class="text-white mb-0 mt-2">@ViewBag.TotalAdmins</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

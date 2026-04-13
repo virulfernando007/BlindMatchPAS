@@ -1,0 +1,37 @@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Migration History";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">Database Migration History</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">This shows the EF Core migration history for the database schema.</p>
+    </div>
+</div>
+
+<div class="custom-card">
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Migration ID</th>
+                    <th>Product Version</th>
+                    <th>Applied At</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var migration in Model)
+                {
+                    <tr>
+                        <td style="font-weight: 500; color: var(--accent);">@migration.MigrationId</td>
+                        <td>@migration.ProductVersion</td>
+                        <td>
+                            <span style="color: var(--text-muted); font-size: 13px;">@migration.AppliedAt</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

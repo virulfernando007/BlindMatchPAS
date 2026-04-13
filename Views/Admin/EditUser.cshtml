@@ -1,0 +1,42 @@
+@model dynamic
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Edit User Details</h2>
+    <a asp-action="Users" class="btn btn-outline-secondary" style="border-color: var(--border); color: var(--text-primary);">Back to Users</a>
+</div>
+
+<div class="custom-card" style="max-width: 600px;">
+    <form asp-action="EditUser" method="post">
+        <input type="hidden" name="UserId" value="@Model.UserId" />
+
+        <div class="mb-4 pb-3 border-bottom" style="border-color: var(--border) !important;">
+            <label class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Current Role</label>
+            <div>
+                <span class="role-badge bg-secondary" style="font-size: 14px; padding: 6px 16px;">@Model.Role (Read-Only)</span>
+            </div>
+        </div>
+
+        <div class="form-group mb-3">
+            <label class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Full Name</label>
+            <input type="text" name="FullName" value="@Model.FullName" class="form-control-custom" required />
+        </div>
+
+        <div class="form-group mb-4">
+            <label class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Department</label>
+            <input type="text" name="Department" value="@Model.Department" class="form-control-custom" />
+        </div>
+
+        <div class="form-check mb-4">
+            <input class="form-check-input" type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") id="isActiveCheck" style="background-color: var(--bg-elevated); border-color: var(--border);">
+            <label class="form-check-label" for="isActiveCheck" style="color: var(--text-primary); font-weight: 500;">
+                Account is Active
+            </label>
+            <div style="font-size: 12px; color: var(--text-muted);">Unchecking this will prevent the user from logging in.</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary-custom w-100">Save Changes</button>
+    </form>
+</div>

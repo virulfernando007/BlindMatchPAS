@@ -89,3 +89,90 @@ function updateThemeIcon(theme) {
         toggleStudentId();
     }
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            let theme = document.documentElement.getAttribute('data-theme');
+            let newTheme = theme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+    }
+
+    function updateThemeIcon(theme) {
+        if (!themeToggleBtn) return;
+        themeToggleBtn.innerHTML = theme === 'dark' ? '☀️' : '🌙'; 
+    }
+
+    // 2. Toast Notification System
+    const body = document.querySelector('body');
+    const successMsg = body.getAttribute('data-toast-success');
+    const errorMsg = body.getAttribute('data-toast-error');
+
+    if (successMsg) showToast(successMsg, 'success');
+    if (errorMsg) showToast(errorMsg, 'error');
+
+    // 3. Form Submission Spinner
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+            }
+        });
+    });
+
+    // 4. Student ID Field Toggle (For Admin Create User)
+    const roleSelect = document.getElementById('RoleSelect');
+    const studentIdContainer = document.getElementById('StudentIdContainer');
+    
+    if (roleSelect && studentIdContainer) {
+        roleSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'Student') {
+                studentIdContainer.style.display = 'block';
+            } else {
+                studentIdContainer.style.display = 'none';
+            }
+        });
+    }
+});
+
+// Global function to call from anywhere
+window.showToast = function(message, type = 'info') {
+    const container = document.getElementById('toast-container') || createToastContainer();
+    
+    const toast = document.createElement('div');
+    toast.className = `custom-toast ${type}`;
+    toast.innerText = message;
+    
+    container.appendChild(toast);
+    
+    // Trigger animation
+    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Auto remove
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+};
+
+function createToastContainer() {
+    const container = document.createElement('div');
+    container.id = 'toast-container';
+    document.body.appendChild(container);
+    return container;
+}
