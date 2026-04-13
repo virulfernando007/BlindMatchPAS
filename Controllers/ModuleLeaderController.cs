@@ -1,11 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-public IActionResult Dashboard()
+namespace BlindMatchPAS.Controllers
 {
-    ViewBag.TotalProjects = 10;
-    ViewBag.TotalMatches = 5;
-    ViewBag.PendingProjects = 3;
-    ViewBag.TotalUsers = 20;
+    public class ModuleLeaderController : Controller
+    {
+        public IActionResult Dashboard()
+        {
+            ViewBag.TotalProjects = 10;
+            ViewBag.TotalMatches = 5;
+            ViewBag.PendingProjects = 3;
+            ViewBag.TotalUsers = 20;
 
-    return View();
+            return View();
+        }
+    }
 }
