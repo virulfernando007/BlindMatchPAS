@@ -41,7 +41,8 @@ builder.Services.AddScoped<IResearchAreaRepository, ResearchAreaRepository>();
 
 // ─── Services ─────────────────────────────────────────────────────────────────
 builder.Services.AddScoped<IMatchingService, MatchingService>();
-builder.Services.AddScoped<IProjectService,  ProjectService>();
+builder.Services.AddScoped<IProjectService,  ProjectService>(); // Restored your team's real service
+builder.Services.AddScoped<IBlindReviewService, MockProjectService>(); // Added your isolated mock service
 
 // ─── MVC ──────────────────────────────────────────────────────────────────────
 builder.Services.AddControllersWithViews();
@@ -67,6 +68,7 @@ app.MapControllerRoute(
     pattern: "{controller=Supervisor}/{action=BlindReview}/{id?}");
 
 // ---- Database Initialisation ----
+// (Still commented out so it doesn't crash trying to find SQL Server!)
 /* using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
