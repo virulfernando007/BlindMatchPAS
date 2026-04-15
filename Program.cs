@@ -64,14 +64,14 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Supervisor}/{action=BlindReview}/{id?}");
 
-// ─── Database Initialisation ──────────────────────────────────────────────────
-using (var scope = app.Services.CreateScope())
+// ---- Database Initialisation ----
+/* using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
     await DbInitializer.SeedAsync(scope.ServiceProvider);
-}
+} */
 
 app.Run();
