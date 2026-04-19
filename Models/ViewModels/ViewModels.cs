@@ -47,7 +47,7 @@ namespace BlindMatchPAS.Models.ViewModels
 
         [Display(Name = "Student ID")]
         [RegularExpression(@"^[A-Z]{2}\d{6}$",
-            ErrorMessage = "Student ID must be 2 uppercase letters followed by 6 digits. e.g. CS202301")]
+        ErrorMessage = "Student ID must follow the format: 2 uppercase letters followed by 6 digits (e.g. CS202301).")]
         public string? StudentId { get; set; }
 
         [StringLength(100)]
@@ -85,6 +85,8 @@ namespace BlindMatchPAS.Models.ViewModels
         public IFormFile? AttachmentFile { get; set; }
 
         public IEnumerable<ResearchArea> ResearchAreas { get; set; } = new List<ResearchArea>();
+
+        public string? AttachmentPath { get; set; }
     }
 
     // ─── Blind Project (Supervisor sees — NO student info) ────────────────────
@@ -143,6 +145,7 @@ namespace BlindMatchPAS.Models.ViewModels
         public int ProjectId { get; set; }
         public string Title { get; set; } = string.Empty;
         public string ResearchArea { get; set; } = string.Empty;
+        public string ShortDescription { get; set; } = string.Empty;
         public ProjectStatus Status { get; set; }
         public DateTime SubmittedAt { get; set; }
         public bool IsRevealed { get; set; }
@@ -199,4 +202,72 @@ namespace BlindMatchPAS.Models.ViewModels
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
     }
+
+public class StudentProfileViewModel
+{
+    [Required(ErrorMessage = "Full name is required.")]
+    [StringLength(100)]
+    [Display(Name = "Full Name")]
+    public string FullName { get; set; } = string.Empty;
+
+    [Display(Name = "Email Address")]
+    public string Email { get; set; } = string.Empty;
+
+    [Display(Name = "Student ID")]
+    [RegularExpression(@"^\d+$",
+        ErrorMessage = "Student ID must contain numbers only.")]
+    public string? StudentId { get; set; }
+
+    [StringLength(50)]
+    [Display(Name = "Batch")]
+    public string? Batch { get; set; }
+
+    [StringLength(100)]
+    [Display(Name = "Faculty")]
+    public string? Faculty { get; set; }
+
+    [StringLength(200)]
+    [Display(Name = "Degree Name")]
+    public string? DegreeName { get; set; }
+
+    [StringLength(100)]
+    [Display(Name = "University")]
+    public string? University { get; set; }
+
+    public DateTime CreatedAt { get; set; }
+}
+public class ProjectDetailViewModel
+{
+    public int ProjectId { get; set; }
+    public string Title { get; set; } = string.Empty;
+    public string ShortDescription { get; set; } = string.Empty;
+    public string Abstract { get; set; } = string.Empty;
+    public List<string> ResearchAreas { get; set; } = new();
+    public ProjectType ProjectType { get; set; }
+    public ProjectStatus Status { get; set; }
+    public DateTime SubmittedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public string? AttachmentPath { get; set; }
+}
+
+public class ChangePasswordViewModel
+{
+    [Required(ErrorMessage = "Current password is required.")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Current Password")]
+    public string CurrentPassword { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "New password is required.")]
+    [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters.")]
+    [DataType(DataType.Password)]
+    [Display(Name = "New Password")]
+    public string NewPassword { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Please confirm your new password.")]
+    [DataType(DataType.Password)]
+    [Compare("NewPassword", ErrorMessage = "Passwords do not match.")]
+    [Display(Name = "Confirm New Password")]
+    public string ConfirmPassword { get; set; } = string.Empty;
+}
+
 }
