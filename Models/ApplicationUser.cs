@@ -15,6 +15,21 @@ namespace BlindMatchPAS.Models
         [StringLength(100)]
         public string? Department { get; set; }
 
+        [StringLength(50)]
+        public string? Batch { get; set; }
+
+        [StringLength(100)]
+        public string? Faculty { get; set; }
+
+        /*[StringLength(200)]
+        public string? DegreeName { get; set; }*/
+        [StringLength(200)]
+        [Display(Name = "Degree Name")]
+        public string? DegreeName { get; set; }
+
+        [StringLength(100)]
+        [Display(Name = "University")]
+        public string? University { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public bool IsActive { get; set; } = true;
