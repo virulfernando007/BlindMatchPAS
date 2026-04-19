@@ -100,29 +100,40 @@ namespace BlindMatchPAS.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
 
-            var dashboard = await _projectService.GetStudentDashboardAsync(user.Id, user.FullName);
-            var row = dashboard.Projects.FirstOrDefault(p => p.ProjectId == id);
+            var project = await _projectService.GetProjectForEditAsync(user.Id, id);
+            if (project == null) return NotFound();
 
-            if (row == null) return NotFound();
-
-            if (row.Status == ProjectStatus.Matched)
+            if (project.Status == ProjectStatus.Matched)
             {
                 TempData["Error"] = "A matched project cannot be edited.";
                 return RedirectToAction(nameof(Dashboard));
             }
 
-            if (row.Status == ProjectStatus.Withdrawn)
+            if (project.Status == ProjectStatus.Withdrawn)
             {
                 TempData["Error"] = "A withdrawn project cannot be edited.";
                 return RedirectToAction(nameof(Dashboard));
             }
 
             var areas = await _researchAreaRepo.GetActiveAreasAsync();
+
+            var selectedIds = string.IsNullOrEmpty(project.ResearchAreaIds)
+                ? new List<int>()
+                : project.ResearchAreaIds
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => int.TryParse(x.Trim(), out var n) ? n : 0)
+                    .Where(x => x > 0)
+                    .ToList();
+
             return View(new ProjectSubmissionViewModel
             {
-                Id            = id,
-                Title         = row.Title,
-                ResearchAreas = areas
+                Id                      = id,
+                Title                   = project.Title,
+                ShortDescription        = project.ShortDescription,
+                Abstract                = project.Abstract,
+                SelectedResearchAreaIds = selectedIds,
+                ResearchAreas           = areas,
+                AttachmentPath          = project.AttachmentPath
             });
         }
 
@@ -166,5 +177,88 @@ namespace BlindMatchPAS.Controllers
 
             return RedirectToAction(nameof(Dashboard));
         }
-    }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int projectId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            var dashboard = await _projectService.GetStudentDashboardAsync(user.Id, user.FullName);
+            var row = dashboard.Projects.FirstOrDefault(p => p.ProjectId == projectId);
+
+            if (row == null)
+            {
+                TempData["Error"] = "Project not found.";
+                return RedirectToAction(nameof(Dashboard));
+            }
+
+            if (row.Status != ProjectStatus.Withdrawn)
+            {
+                TempData["Error"] = "Only withdrawn projects can be deleted.";
+                return RedirectToAction(nameof(Dashboard));
+            }
+
+            await _projectService.DeleteProjectAsync(user.Id, projectId);
+
+            TempData["Success"] = "Project deleted permanently.";
+            return RedirectToAction(nameof(Dashboard));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            return View(new StudentProfileViewModel
+            {
+                FullName   = user.FullName,
+                Email      = user.Email ?? "",
+                StudentId  = user.StudentId ?? "",
+                Batch      = user.Batch ?? "",
+                Faculty    = user.Faculty ?? "",
+                DegreeName = user.DegreeName ?? "",
+                University = user.University ?? "",
+                CreatedAt  = user.CreatedAt
+            });
+        }
+
+        public Task<IActionResult> Profile(StudentProfileViewModel model)
+        {
+            return Profile(model, ModelState);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile(StudentProfileViewModel model, Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary modelState)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            user.FullName  = model.FullName;
+            user.StudentId = model.StudentId;
+            user.Batch     = model.Batch;
+            user.Faculty   = model.Faculty;
+            user.DegreeName = model.DegreeName;
+            user.University = model.University;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                TempData["Success"] = "Profile updated successfully.";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            foreach (var error in result.Errors)
+                modelState.AddModelError(string.Empty, error.Description);
+
+            return View(model);
+        }    
+    }   
+
 }

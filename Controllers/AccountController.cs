@@ -66,5 +66,45 @@ namespace BlindMatchPAS.Controllers
             if (User.IsInRole("Admin"))        return RedirectToAction("Dashboard", "Admin");
             return RedirectToAction("Index", "Home");
         }
-    }
+
+        [HttpGet]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public IActionResult ChangePassword() => View();
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+        if (!ModelState.IsValid) return View(model);
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Challenge();
+
+        var result = await _userManager.ChangePasswordAsync(
+        user, model.CurrentPassword, model.NewPassword);
+
+        if (result.Succeeded)
+        {
+        TempData["Success"] = "Password changed successfully.";
+
+        // Redirect back to the right profile page based on role
+        if (User.IsInRole("Student"))
+            return RedirectToAction("Profile", "Student");
+        if (User.IsInRole("Supervisor"))
+            return RedirectToAction("Dashboard", "Supervisor");
+        if (User.IsInRole("ModuleLeader"))
+            return RedirectToAction("Dashboard", "ModuleLeader");
+        if (User.IsInRole("Admin"))
+            return RedirectToAction("Dashboard", "Admin");
+
+        return RedirectToAction("Index", "Home");
+        }
+
+        foreach (var error in result.Errors)
+        ModelState.AddModelError(string.Empty, error.Description);
+
+         return View(model);
+        }
+     }
 }
