@@ -130,9 +130,11 @@ namespace BlindMatchPAS.Services
         Task<int> SubmitProjectAsync(string studentId, ProjectSubmissionViewModel model, string? attachmentPath = null);
         Task<bool> UpdateProjectAsync(string studentId, ProjectSubmissionViewModel model);
         Task<bool> WithdrawProjectAsync(string studentId, int projectId);
+        Task<bool> DeleteProjectAsync(string studentId, int projectId);
         Task<StudentDashboardViewModel> GetStudentDashboardAsync(string studentId, string studentName);
         Task<SupervisorDashboardViewModel> GetSupervisorDashboardAsync(string supervisorId, string supervisorName);
         Task<ModuleLeaderDashboardViewModel> GetModuleLeaderDashboardAsync();
+        Task<Project?> GetProjectForEditAsync(string studentId, int projectId);
     }
 
     public class ProjectService : IProjectService
@@ -234,6 +236,7 @@ namespace BlindMatchPAS.Services
                     ProjectId    = p.Id,
                     Title        = p.Title,
                     ResearchArea = p.ResearchArea?.Name ?? "",
+                    ShortDescription = p.ShortDescription,
                     Status       = p.Status,
                     SubmittedAt  = p.SubmittedAt,
                     IsRevealed   = p.Match?.IsRevealed ?? false,
@@ -337,6 +340,28 @@ namespace BlindMatchPAS.Services
                 UnmatchedProjects = allProjects
                     .Where(p => p.Status == ProjectStatus.Pending).ToList()
             };
+        }
+
+        public async Task<bool> DeleteProjectAsync(string studentId, int projectId)
+        {
+            var project = await _projectRepository.GetByIdAsync(projectId);
+            if (project == null || project.StudentId != studentId)
+                return false;
+
+            if (project.Status == ProjectStatus.Matched)
+                return false;
+
+            await _projectRepository.DeleteAsync(project);
+            await _projectRepository.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<Project?> GetProjectForEditAsync(string studentId, int projectId)
+        {
+            var project = await _projectRepository.GetByIdAsync(projectId);
+            if (project == null || project.StudentId != studentId)
+                return null;
+            return project;
         }
     }
 }
