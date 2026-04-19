@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace BlindMatchPAS.Controllers
 {
+    
     [Authorize(Roles = "Admin")] 
     public class AdminController : Controller
     {
@@ -26,6 +27,7 @@ namespace BlindMatchPAS.Controllers
         [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
+        
             ViewBag.TotalStudents = (await _userManager.GetUsersInRoleAsync("Student")).Count;
             ViewBag.TotalSupervisors = (await _userManager.GetUsersInRoleAsync("Supervisor")).Count;
             ViewBag.TotalLeaders = (await _userManager.GetUsersInRoleAsync("ModuleLeader")).Count;
@@ -35,17 +37,28 @@ namespace BlindMatchPAS.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Users(string roleFilter, bool? statusFilter)
+        public async Task<IActionResult> Users()
         {
-            // This will return an empty list for now until users are added to the DB
-            var users = new List<AdminUserRow>();
-            return View(users);
+            
+            var users = await _userManager.Users.ToListAsync();
+            
+            
+            
+            var userRows = new List<AdminUserRow>(); 
+            return View(userRows);
         }
 
         [HttpGet]
         public IActionResult CreateUser()
         {
             return View(new RegisterViewModel());
+        }
+
+        [HttpGet]
+        public IActionResult MigrationHistory()
+        {
+            
+            return View(); 
         }
     }
 }
