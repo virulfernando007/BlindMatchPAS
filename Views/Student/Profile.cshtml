@@ -1,0 +1,177 @@
+@model BlindMatchPAS.Models.ViewModels.StudentProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">My <span class="accent-text">Profile</span></h1>
+        <p class="page-subtitle">Manage your personal details and account information.</p>
+    </div>
+    <a asp-controller="Student" asp-action="Dashboard" class="btn-outline">← Dashboard</a>
+</div>
+
+<div class="profile-layout">
+
+    <!-- Left Sidebar -->
+    <div class="profile-sidebar">
+        <div class="profile-avatar-card">
+            <div class="profile-avatar">
+                @Model.FullName.Substring(0, 1).ToUpper()
+            </div>
+            <div class="profile-avatar-name">@Model.FullName</div>
+            <div class="profile-avatar-email">@Model.Email</div>
+            <div class="profile-role-badge">Student</div>
+        </div>
+
+        <div class="profile-info-card">
+            <div class="profile-info-row">
+                <span class="profile-info-label">Student ID</span>
+                <span class="profile-info-value">
+                    @(string.IsNullOrEmpty(Model.StudentId) ? "Not set" : Model.StudentId)
+                </span>
+            </div>
+            <div class="profile-info-row">
+                <span class="profile-info-label">Batch</span>
+                <span class="profile-info-value">
+                    @(string.IsNullOrEmpty(Model.Batch) ? "Not set" : Model.Batch)
+                </span>
+            </div>
+            <div class="profile-info-row">
+                <span class="profile-info-label">Faculty</span>
+                <span class="profile-info-value">
+                    @(string.IsNullOrEmpty(Model.Faculty) ? "Not set" : Model.Faculty)
+                </span>
+            </div>
+            <div class="profile-info-row">
+    <span class="profile-info-label">Degree</span>
+    <span class="profile-info-value">
+        @if (!string.IsNullOrEmpty(Model.DegreeName))
+        {
+            @Model.DegreeName
+            if (!string.IsNullOrEmpty(Model.University))
+            {
+                <span style="color:var(--text-muted)"> | @Model.University</span>
+            }
+        }
+        else
+        {
+            <span>Not set</span>
+        }
+    </span>
+</div>
+            <div class="profile-info-row">
+                <span class="profile-info-label">Member since</span>
+                <span class="profile-info-value">@Model.CreatedAt.ToString("MMMM yyyy")</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Main -->
+    <div class="profile-main">
+        <div class="form-section-card">
+            <div class="form-section-title">Edit Profile</div>
+
+            <form asp-controller="Student" asp-action="Profile" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="All" class="validation-summary"></div>
+
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label asp-for="FullName" class="form-label">
+                        Full Name <span class="required">*</span>
+                    </label>
+                    <input asp-for="FullName" class="form-input" placeholder="Your full name" />
+                    <span asp-validation-for="FullName" class="field-error"></span>
+                </div>
+
+                <!-- Email — read only -->
+                <div class="form-group">
+                    <label asp-for="Email" class="form-label">Email Address</label>
+                    <input asp-for="Email" class="form-input" disabled />
+                    <span class="form-hint">Email cannot be changed.</span>
+                </div>
+
+                <!-- Student ID -->
+                <div class="form-group">
+                    <label asp-for="StudentId" class="form-label">Student ID</label>
+                    <input asp-for="StudentId" class="form-input"
+                           placeholder="e.g. CS202301" />
+                    <span asp-validation-for="StudentId" class="field-error"></span>
+                </div>
+
+                <!-- Batch -->
+                <div class="form-group">
+                    <label asp-for="Batch" class="form-label">Batch</label>
+                    <input asp-for="Batch" class="form-input"
+                           placeholder="e.g. 2023/2024" />
+                    <span asp-validation-for="Batch" class="field-error"></span>
+                </div>
+
+                <!-- Faculty -->
+                <div class="form-group">
+                    <label asp-for="Faculty" class="form-label">Faculty</label>
+                    <input asp-for="Faculty" class="form-input"
+                           placeholder="e.g. Faculty of Computing" />
+                    <span asp-validation-for="Faculty" class="field-error"></span>
+                </div>
+
+                <!-- Degree Programme -->
+<div class="form-group" style="margin-bottom:0">
+    <label class="form-label">Degree Programme</label>
+    <div class="degree-input-group">
+        <input asp-for="DegreeName" class="form-input degree-name-input"
+               placeholder="e.g. BSc Hons in Technology Management" />
+        <div class="degree-divider">|</div>
+        <select asp-for="University" class="form-input form-select degree-uni-select">
+            <option value="">University of Victoria</option>
+            <option value="Plymouth University">University of Plymouth</option>
+            <option value="UGC">UGC</option>
+            <option value="American University (AU)">American University</option>
+            <option value="Southern Cross University">Southern Cross University</option>
+        </select>
+    </div>
+    <span asp-validation-for="DegreeName" class="field-error"></span>
+</div>
+
+                <div class="form-actions" style="margin-top:1.5rem">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Account Security -->
+        <div class="form-section-card" style="margin-top:1rem">
+            <div class="form-section-title">Account Security</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+                <div>
+                    <div style="font-size:14px;font-weight:500;color:var(--text-primary)">Password</div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:3px">
+                        Keep your account secure with a strong password.
+                    </div>
+                </div>
+                <a asp-controller="Account" asp-action="ChangePassword"
+                   class="btn-outline" style="font-size:13px">Change Password</a>
+            </div>
+            <div style="margin-top:1.25rem;padding-top:1.25rem;
+                        border-top:1px solid var(--border);
+                        display:flex;align-items:center;justify-content:space-between;
+                        flex-wrap:wrap;gap:1rem">
+                <div>
+                    <div style="font-size:14px;font-weight:500;color:var(--text-primary)">
+                        Account Status
+                    </div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:3px">
+                        Your account is active and in good standing.
+                    </div>
+                </div>
+                <span class="status-badge status-matched">Active</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
