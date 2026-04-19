@@ -67,13 +67,12 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Supervisor}/{action=BlindReview}/{id?}");
 
-// ---- Database Initialisation ----
-// (Still commented out so it doesn't crash trying to find SQL Server!)
-/* using (var scope = app.Services.CreateScope())
+// ─── Database Initialization ──────────────────────────────────────────────────
+using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
     await DbInitializer.SeedAsync(scope.ServiceProvider);
-} */
+}
 
 app.Run();
