@@ -4,58 +4,108 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - BlindMatch PAS</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <!-- Font Awesome 6.5.0 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvtF+9eTGYJcK8BqkpXtVu67XHeIiYcbNonnkTN00Az1z5PrMSqV5+xHkz6KIc75zbxI7G39CLvI==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
 </head>
 <body data-toast-success="@TempData["Success"]" data-toast-error="@TempData["Error"]">
 
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Sidebar Navigation -->
     <nav class="sidebar">
-        <div class="p-4">
-            <a href="/" class="logo-text">BlindMatch<span class="logo-dot">.</span></a>
+        <div style="padding: 1.5rem 1.5rem 1rem;">
+            <a href="/" class="nav-brand">BlindMatch<span class="brand-dot">.</span></a>
         </div>
         
-        <div class="mt-4">
+        <div class="sidebar-nav" style="margin-top: 2rem;">
             @if (User.IsInRole("Admin"))
             {
-                <span class="px-4 text-muted" style="font-size: 11px; font-weight: 700; text-transform: uppercase;">Admin Controls</span>
-                <a class="sidebar-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")" asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
-                <a class="sidebar-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")" asp-controller="Admin" asp-action="Users">Manage Users</a>
-                <a class="sidebar-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "MigrationHistory" ? "active" : "")" asp-controller="Admin" asp-action="MigrationHistory">Migration History</a>
+                <span class="nav-section-label"><i class="fa-solid fa-shield"></i> Admin Controls</span>
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")" asp-controller="Admin" asp-action="Dashboard">
+                    <i class="fa-solid fa-chart-line nav-icon"></i>
+                    Dashboard
+                </a>
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")" asp-controller="Admin" asp-action="Users">
+                    <i class="fa-solid fa-users nav-icon"></i>
+                    Manage Users
+                </a>
+                <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "MigrationHistory" ? "active" : "")" asp-controller="Admin" asp-action="MigrationHistory">
+                    <i class="fa-solid fa-history nav-icon"></i>
+                    Migration History
+                </a>
             }
-            @* Other role blocks (Student, Supervisor, ModuleLeader) will go here later *@
+            @if (User.IsInRole("Student"))
+            {
+                <span class="nav-section-label"><i class="fa-solid fa-book"></i> Student</span>
+                <a class="nav-link" href="#">
+                    <i class="fa-solid fa-circle-notch nav-icon"></i>
+                    My Dashboard
+                </a>
+            }
+            @if (User.IsInRole("ModuleLeader"))
+            {
+                <span class="nav-section-label"><i class="fa-solid fa-chalkboard-user"></i> Module Leader</span>
+                <a class="nav-link" href="#">
+                    <i class="fa-solid fa-clipboard-list nav-icon"></i>
+                    Projects
+                </a>
+            }
         </div>
     </nav>
 
-    <div class="main-content">
+    <!-- Main Content Wrapper -->
+    <div class="main-content with-sidebar">
+        <!-- Top Navbar -->
         <header class="top-navbar">
-            <div>
-                </div>
-            <div class="d-flex align-items-center gap-3">
-                <button id="theme-toggle" class="btn btn-sm btn-link text-decoration-none" style="font-size: 20px;">🌙</button>
+            <div class="navbar-left">
+                <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="navbar-right">
+                <!-- Theme Toggle -->
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark/light mode">
+                    <span id="themeIcon" class="theme-icon-circle"></span>
+                </button>
                 
+                <!-- User Info & Logout -->
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
-                    <span style="color: var(--text-primary); font-size: 14px; font-weight: 500;">@User.Identity.Name</span>
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button type="submit" class="btn btn-sm btn-outline-danger" style="border-radius: 6px;">Logout</button>
-                    </form>
+                    <div class="nav-user">
+                        <span class="nav-username">@User.Identity.Name</span>
+                        <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" style="margin: 0;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-logout" aria-label="Logout">
+                                <i class="fa-solid fa-sign-out-alt"></i> Logout
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <a href="~/Identity/Account/Login" class="btn-nav-login">
+                        <i class="fa-solid fa-sign-in-alt"></i> Sign In
+                    </a>
                 }
             </div>
         </header>
 
-        <main role="main" class="p-4 pb-5">
+        <!-- Page Content -->
+        <main role="main" style="flex: 1; padding: 2.5rem;">
             @RenderBody()
         </main>
-        
-        <footer class="mt-auto p-4 border-top" style="border-color: var(--border) !important;">
-            <div class="text-center" style="color: var(--text-muted); font-size: 12px;">
-                BlindMatch PAS &copy; 2026 | PUSL2020 Coursework
-            </div>
+
+        <!-- Footer -->
+        <footer class="app-footer" style="margin-left: 0;">
+            <div>BlindMatch PAS &copy; 2026 | PUSL2020 Coursework</div>
         </footer>
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Scripts -->
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
