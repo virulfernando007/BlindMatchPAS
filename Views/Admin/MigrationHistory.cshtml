@@ -1,45 +1,61 @@
-@model IEnumerable<dynamic>
+@model IEnumerable<BlindMatchPAS.Models.MigrationHistory>
 @{
     ViewData["Title"] = "Migration History";
 }
 
-{
-    <div class="text-white">
-        <h4>Migration History</h4>
-        <p class="text-muted">Database bypassed - no records to display.</p>
-    </div>
-    return;
-}
-
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="page-header">
     <div>
-        <h2 class="mb-1">Database Migration History</h2>
-        <p style="color: var(--text-muted); font-size: 14px;">This shows the EF Core migration history for the database schema.</p>
+        <h1 class="page-title">Database <span class="accent-text">Migrations</span></h1>
+        <p class="page-subtitle">View the history of applied Entity Framework Core migrations.</p>
     </div>
+    <a asp-action="Dashboard" class="btn-outline">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+    </a>
 </div>
 
-<div class="custom-card">
-    <div class="table-responsive">
-        <table class="custom-table">
-            <thead>
-                <tr>
-                    <th>Migration ID</th>
-                    <th>Product Version</th>
-                    <th>Applied At</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var migration in Model)
-                {
-                    <tr>
-                        <td style="font-weight: 500; color: var(--accent);">@migration.MigrationId</td>
-                        <td>@migration.ProductVersion</td>
-                        <td>
-                            <span style="color: var(--text-muted); font-size: 13px;">@migration.AppliedAt</span>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div class="content-card">
+    <div class="card-header">
+        <h2 class="card-title">Migration History</h2>
     </div>
+
+    @if (Model.Any())
+    {
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Migration ID</th>
+                        <th>Product Version</th>
+                        <th>Applied At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var migration in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div style="font-family: 'Courier New', monospace; font-size: 12px; color: #bbf706; font-weight: 500;">
+                                    @migration.MigrationId
+                                </div>
+                            </td>
+                            <td style="color: #a0aec0; font-size: 13px;">
+                                @migration.ProductVersion
+                            </td>
+                            <td style="color: #888888; font-size: 13px;">
+                                @migration.AppliedAt.ToString("dd MMM yyyy HH:mm:ss")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fa-solid fa-database empty-icon"></i>
+            <h3 class="empty-title">No Migrations Found</h3>
+            <p class="empty-desc">No database migrations have been applied yet.</p>
+        </div>
+    }
 </div>
