@@ -41,7 +41,8 @@ builder.Services.AddScoped<IResearchAreaRepository, ResearchAreaRepository>();
 
 // ─── Services ─────────────────────────────────────────────────────────────────
 builder.Services.AddScoped<IMatchingService, MatchingService>();
-builder.Services.AddScoped<IProjectService,  ProjectService>();
+builder.Services.AddScoped<IProjectService,  ProjectService>(); // Restored your team's real service
+builder.Services.AddScoped<IBlindReviewService, MockProjectService>(); // Added your isolated mock service
 
 // ─── MVC ──────────────────────────────────────────────────────────────────────
 builder.Services.AddControllersWithViews();
@@ -64,9 +65,9 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Supervisor}/{action=BlindReview}/{id?}");
 
-// ─── Database Initialisation ──────────────────────────────────────────────────
+// ─── Database Initialization ──────────────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

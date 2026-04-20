@@ -1,0 +1,56 @@
+@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Blind Review Board";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Blind <span class="accent-text">Review</span></h1>
+        <p class="page-subtitle">Evaluate project proposals purely on technical merit. Student identities are protected.</p>
+    </div>
+    <a class="btn-outline" asp-controller="Supervisor" asp-action="Dashboard">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
+
+@if (Model.Any())
+{
+    <div class="project-cards-list">
+        @foreach (dynamic project in Model)
+        {
+            <div class="project-card">
+                <div class="project-card-header">
+                    <h3 class="project-title">@project.Title</h3>
+                    <span class="status-badge status-review">@project.CompatibilityScore% Match</span>
+                </div>
+                <div class="project-meta">
+                    <span class="project-date">Submitted: @project.SubmittedDate</span>
+                    <div class="area-badges">
+                        @foreach (var area in project.ResearchAreas)
+                        {
+                            <span class="area-badge">@area.Name</span>
+                        }
+                    </div>
+                </div>
+                <div class="project-description">
+                    <p>@project.Abstract</p>
+                </div>
+                <div class="project-actions">
+                    <button class="btn-primary">
+                        <i class="fa-solid fa-star"></i> Express Interest
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <i class="fa-solid fa-search empty-icon"></i>
+        <h3 class="empty-title">No Projects Available</h3>
+        <p class="empty-desc">There are currently no projects available for blind review.</p>
+        <a class="btn-primary" asp-controller="Supervisor" asp-action="Dashboard">Return to Dashboard</a>
+    </div>
+}

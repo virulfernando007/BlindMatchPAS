@@ -1,0 +1,39 @@
+@{
+    ViewData["Title"] = "Supervisor Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Supervisor <span class="accent-text">Dashboard</span></h1>
+        <p class="page-subtitle">Overview of your supervision activities and project reviews.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">@ViewBag.TotalProjects</div>
+        <div class="stat-label">Total Projects</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@ViewBag.PendingReviews</div>
+        <div class="stat-label">Pending Reviews</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@ViewBag.MatchedProjects</div>
+        <div class="stat-label">Matched Projects</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">@ViewBag.TotalStudents</div>
+        <div class="stat-label">Total Students</div>
+    </div>
+</div>
+
+<div class="content-card">
+    <div class="card-header">
+        <h2 class="card-title">Recent Activity</h2>
+    </div>
+    <div class="card-body">
+        <p>Recent projects, reviews, etc.</p>
+    </div>
+</div>
