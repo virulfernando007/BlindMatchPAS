@@ -86,7 +86,7 @@
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     <span style="color: var(--text-primary); font-size: 14px; font-weight: 500;">@User.Identity.Name</span>
-                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
                         <button type="submit" class="btn-sm btn-danger" style="margin: 0;">Logout</button>
                     </form>
                 }
