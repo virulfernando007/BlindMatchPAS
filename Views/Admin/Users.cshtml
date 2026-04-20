@@ -4,38 +4,78 @@
     ViewData["Title"] = "User Management";
 }
 
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 text-white fw-bold">User Management</h1>
-        <a href="/Admin/CreateUser" class="btn btn-primary" style="background-color: #bbf706; color: black; border: none; font-weight: bold;">
-            + Create New User
-        </a>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">User <span class="accent-text">Management</span></h1>
+        <p class="page-subtitle">Create, edit, and manage system users and their roles.</p>
+    </div>
+    <a asp-action="CreateUser" class="btn-primary">
+        + Create New User
+    </a>
+</div>
+
+<!-- Users Table -->
+<div class="content-card">
+    <div class="card-header">
+        <h2 class="card-title">All Users</h2>
     </div>
 
-    <div class="card bg-dark border-0 shadow">
-        <div class="card-body p-0">
-            <table class="table table-hover table-dark mb-0">
-                <thead style="background-color: #1a202c;">
+    @if (Model.Any())
+    {
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
                     <tr>
-                        <th class="border-0 px-4 py-3">Full Name</th>
-                        <th class="border-0 py-3">Email</th>
-                        <th class="border-0 py-3">Role</th>
-                        <th class="border-0 py-3">Status</th>
-                        <th class="border-0 px-4 py-3 text-end">Actions</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="px-4 py-3">System Test User</td>
-                        <td>test@university.com</td>
-                        <td><span class="badge bg-secondary">Student</span></td>
-                        <td><span class="text-success">● Active</span></td>
-                        <td class="px-4 py-3 text-end">
-                            <button class="btn btn-sm btn-outline-light border-0">Edit</button>
-                        </td>
-                    </tr>
-                    </tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="user-name" style="font-weight: 500;">@user.FullName</div>
+                            </td>
+                            <td style="color: #aaaaaa; font-size: 13px;">@user.Email</td>
+                            <td>
+                                <span class="role-badge" style="background-color: #6b7280; color: white; padding: 4px 12px; border-radius: 4px; font-size: 12px;">
+                                    @user.Role
+                                </span>
+                            </td>
+                            <td>
+                                @if (user.IsActive)
+                                {
+                                    <span style="color: #22c55e; font-weight: 500;">● Active</span>
+                                }
+                                else
+                                {
+                                    <span style="color: #ef4444; font-weight: 500;">● Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a asp-action="EditUser" asp-route-id="@user.UserId" class="btn-sm btn-primary">
+                                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
             </table>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="empty-state">
+            <i class="fa-solid fa-users empty-icon"></i>
+            <h3 class="empty-title">No Users Found</h3>
+            <p class="empty-desc">Start by creating a new user account.</p>
+            <a asp-action="CreateUser" class="btn-primary">+ Create New User</a>
+        </div>
+    }
 </div>
