@@ -65,14 +65,14 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Supervisor}/{action=BlindReview}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 // ─── Database Initialization ──────────────────────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    // db.Database.Migrate();  // Commented out - LocalDB not available
-    // await DbInitializer.SeedAsync(scope.ServiceProvider);
+    db.Database.Migrate();
+    await DbInitializer.SeedAsync(scope.ServiceProvider);
 }
 
 app.Run();
