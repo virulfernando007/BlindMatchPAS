@@ -1,16 +1,82 @@
-﻿<h2>All Projects</h2>
+﻿@model IEnumerable<BlindMatchPAS.Models.Project>
+@{
+    ViewData["Title"] = "All Projects";
+}
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Title</th>
-        <th>Status</th>
-    </tr>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">All <span class="accent-text">Projects</span></h1>
+        <p class="page-subtitle">View and manage all student project proposals.</p>
+    </div>
+    <a asp-controller="ModuleLeader" asp-action="Dashboard" class="btn-outline">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+    </a>
+</div>
 
-    @foreach (var project in Model)
+<!-- Projects Table -->
+<div class="content-card">
+    <div class="card-header">
+        <h2 class="card-title">Project Proposals</h2>
+    </div>
+
+    @if (!Model.Any())
     {
-        <tr>
-            <td>@project.Title</td>
-            <td>@project.Status</td>
-        </tr>
+        <div class="empty-state">
+            <i class="fa-solid fa-folder-open empty-icon"></i>
+            <h3 class="empty-title">No Projects Available</h3>
+            <p class="empty-desc">There are currently no student projects to review.</p>
+        </div>
     }
-</table>
+    else
+    {
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Project Title</th>
+                        <th>Status</th>
+                        <th>Submitted</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var project in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="project-title">@project.Title</div>
+                            </td>
+                            <td>
+                                @switch (project.Status)
+                                {
+                                    case BlindMatchPAS.Models.ProjectStatus.Pending:
+                                        <span class="status-badge status-pending">Pending</span>
+                                        break;
+                                    case BlindMatchPAS.Models.ProjectStatus.UnderReview:
+                                        <span class="status-badge status-review">Under Review</span>
+                                        break;
+                                    case BlindMatchPAS.Models.ProjectStatus.Matched:
+                                        <span class="status-badge status-matched">Matched</span>
+                                        break;
+                                    case BlindMatchPAS.Models.ProjectStatus.Withdrawn:
+                                        <span class="status-badge status-withdrawn">Withdrawn</span>
+                                        break;
+                                }
+                            </td>
+                            <td style="color:#aaaaaa; font-size:13px;">
+                                @project.SubmittedAt.ToString("dd MMM yyyy")
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a asp-action="ViewProject" asp-route-id="@project.Id" class="btn-sm btn-primary" title="View Details">
+                                        <i class="fa-solid fa-eye"></i> View
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
