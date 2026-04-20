@@ -1,42 +1,63 @@
-@model dynamic
+@model BlindMatchPAS.Models.ApplicationUser
 @{
     ViewData["Title"] = "Edit User";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">Edit User Details</h2>
-    <a asp-action="Users" class="btn btn-outline-secondary" style="border-color: var(--border); color: var(--text-primary);">Back to Users</a>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Edit <span class="accent-text">@Model.FullName</span></h1>
+        <p class="page-subtitle">Update user details and account status.</p>
+    </div>
+    <a asp-action="Users" class="btn-outline">
+        <i class="fa-solid fa-arrow-left"></i> Back to Users
+    </a>
 </div>
 
-<div class="custom-card" style="max-width: 600px;">
+<div class="content-card" style="max-width: 700px;">
     <form asp-action="EditUser" method="post">
-        <input type="hidden" name="UserId" value="@Model.UserId" />
+        <input type="hidden" name="userId" value="@Model.Id" />
 
-        <div class="mb-4 pb-3 border-bottom" style="border-color: var(--border) !important;">
-            <label class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Current Role</label>
-            <div>
-                <span class="role-badge bg-secondary" style="font-size: 14px; padding: 6px 16px;">@Model.Role (Read-Only)</span>
+        <div class="form-section mb-6">
+            <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 16px; font-size: 14px; text-transform: uppercase;">User Information</h3>
+            
+            <div class="form-group mb-4">
+                <label class="form-label">Email Address</label>
+                <input type="email" value="@Model.Email" class="form-control-custom" disabled />
+                <small style="color: var(--text-muted); margin-top: 4px; display: block;">Email cannot be changed</small>
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="form-label">Full Name</label>
+                <input type="text" name="fullName" value="@Model.FullName" class="form-control-custom" required />
+            </div>
+
+            <div class="form-group mb-4">
+                <label class="form-label">Department</label>
+                <input type="text" name="department" value="@(Model.Department ?? string.Empty)" class="form-control-custom" />
             </div>
         </div>
 
-        <div class="form-group mb-3">
-            <label class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Full Name</label>
-            <input type="text" name="FullName" value="@Model.FullName" class="form-control-custom" required />
+        <div class="form-section mb-6">
+            <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 16px; font-size: 14px; text-transform: uppercase;">Account Status</h3>
+            
+            <div class="form-group">
+                <div style="display: flex; align-items: center; padding: 12px; background-color: var(--bg-elevated); border-radius: 4px; border: 1px solid var(--border);">
+                    <input type="checkbox" id="isActiveCheck" name="isActive" value="true" @(Model.IsActive ? "checked" : "") style="width: 18px; height: 18px; cursor: pointer; accent-color: #bbf706;" />
+                    <label for="isActiveCheck" style="margin-left: 12px; cursor: pointer; flex: 1; margin-bottom: 0; color: var(--text-primary);">
+                        Account is Active
+                    </label>
+                </div>
+                <small style="color: var(--text-muted); margin-top: 8px; display: block;">Unchecking this will prevent the user from logging in.</small>
+            </div>
         </div>
 
-        <div class="form-group mb-4">
-            <label class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Department</label>
-            <input type="text" name="Department" value="@Model.Department" class="form-control-custom" />
+        <div style="display: flex; gap: 12px;">
+            <button type="submit" class="btn-primary" style="flex: 1;">
+                <i class="fa-solid fa-floppy-disk"></i> Save Changes
+            </button>
+            <a asp-action="Users" class="btn-outline" style="flex: 1; text-align: center;">
+                <i class="fa-solid fa-xmark"></i> Cancel
+            </a>
         </div>
-
-        <div class="form-check mb-4">
-            <input class="form-check-input" type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") id="isActiveCheck" style="background-color: var(--bg-elevated); border-color: var(--border);">
-            <label class="form-check-label" for="isActiveCheck" style="color: var(--text-primary); font-weight: 500;">
-                Account is Active
-            </label>
-            <div style="font-size: 12px; color: var(--text-muted);">Unchecking this will prevent the user from logging in.</div>
-        </div>
-
-        <button type="submit" class="btn btn-primary-custom w-100">Save Changes</button>
     </form>
 </div>
