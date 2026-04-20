@@ -1,0 +1,71 @@
+@model BlindMatchPAS.Models.Project
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">@Model.Title</h1>
+        <p class="page-subtitle">View detailed information about this project proposal.</p>
+    </div>
+    <a asp-action="Projects" class="btn-outline">
+        <i class="fa-solid fa-arrow-left"></i> Back to Projects
+    </a>
+</div>
+
+<div class="content-card">
+    <div class="card-header">
+        <h2 class="card-title">Project Overview</h2>
+    </div>
+
+    <div style="padding: 20px;">
+        <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+            <h3 style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Project Title</h3>
+            <p style="color: var(--text-primary); font-size: 18px; font-weight: 500;">@Model.Title</p>
+        </div>
+
+        <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+            <h3 style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Status</h3>
+            <div>
+                @switch (Model.Status)
+                {
+                    case BlindMatchPAS.Models.ProjectStatus.Pending:
+                        <span class="status-badge status-pending">Pending</span>
+                        break;
+                    case BlindMatchPAS.Models.ProjectStatus.UnderReview:
+                        <span class="status-badge status-review">Under Review</span>
+                        break;
+                    case BlindMatchPAS.Models.ProjectStatus.Matched:
+                        <span class="status-badge status-matched">Matched</span>
+                        break;
+                    case BlindMatchPAS.Models.ProjectStatus.Withdrawn:
+                        <span class="status-badge status-withdrawn">Withdrawn</span>
+                        break;
+                }
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+            <h3 style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Submitted Date</h3>
+            <p style="color: var(--text-primary); font-size: 14px;">@Model.SubmittedAt.ToString("dd MMMM yyyy")</p>
+        </div>
+
+        <div style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+            <h3 style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600; margin-bottom: 12px;">Abstract</h3>
+            <p style="color: var(--text-primary); font-size: 14px; line-height: 1.6;">
+                @(string.IsNullOrEmpty(Model.Abstract) ? "No abstract provided." : Model.Abstract)
+            </p>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <h3 style="color: var(--text-muted); font-size: 12px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px;">Project Type</h3>
+            <p style="color: var(--text-primary); font-size: 14px;">@Model.ProjectType</p>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border);">
+            <a asp-action="Projects" class="btn-outline">
+                <i class="fa-solid fa-arrow-left"></i> Back to Projects
+            </a>
+        </div>
+    </div>
+</div>
