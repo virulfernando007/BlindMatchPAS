@@ -3,76 +3,88 @@
     ViewData["Title"] = "Create New User";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">Create New User</h2>
-    <a asp-action="Users" class="btn btn-outline-secondary" style="border-color: var(--border); color: var(--text-primary);">Back to Users</a>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Create New <span class="accent-text">User</span></h1>
+        <p class="page-subtitle">Add a new user account to the system.</p>
+    </div>
+    <a asp-action="Users" class="btn-outline">
+        <i class="fa-solid fa-arrow-left"></i> Back to Users
+    </a>
 </div>
 
-<div class="custom-card" style="max-width: 800px;">
+<div class="content-card" style="max-width: 700px;">
     <form asp-action="CreateUser" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+        <div asp-validation-summary="ModelOnly" style="color: #ef4444; padding: 12px; background-color: rgba(239, 68, 68, 0.1); border-radius: 4px; margin-bottom: 20px;"></div>
 
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="FullName" class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Full Name</label>
-                    <input asp-for="FullName" class="form-control-custom" placeholder="e.g. John Doe" />
-                    <span asp-validation-for="FullName" class="text-danger" style="font-size: 12px;"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="Email" class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Email Address</label>
-                    <input asp-for="Email" type="email" class="form-control-custom" placeholder="john@nsbm.ac.lk" />
-                    <span asp-validation-for="Email" class="text-danger" style="font-size: 12px;"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="Password" class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Password</label>
-                    <input asp-for="Password" type="password" class="form-control-custom" />
-                    <span asp-validation-for="Password" class="text-danger" style="font-size: 12px;"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="ConfirmPassword" class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Confirm Password</label>
-                    <input asp-for="ConfirmPassword" type="password" class="form-control-custom" />
-                    <span asp-validation-for="ConfirmPassword" class="text-danger" style="font-size: 12px;"></span>
-                </div>
+        <div class="form-section mb-6">
+            <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 16px; font-size: 14px; text-transform: uppercase;">Personal Information</h3>
+            
+            <div class="form-group mb-4">
+                <label asp-for="FullName" class="form-label">Full Name</label>
+                <input asp-for="FullName" class="form-control-custom" placeholder="e.g. John Doe" required />
+                <span asp-validation-for="FullName" class="text-danger" style="font-size: 12px;"></span>
             </div>
 
-            <div class="col-md-6">
-                <div class="form-group mb-3">
-                    <label asp-for="Role" class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">System Role</label>
-                    <select asp-for="Role" class="form-control-custom form-select" id="RoleSelect">
-                        <option value="">-- Select a Role --</option>
-                        <option value="Student">Student</option>
-                        <option value="Supervisor">Supervisor</option>
-                        <option value="ModuleLeader">Module Leader</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                    <span asp-validation-for="Role" class="text-danger" style="font-size: 12px;"></span>
-                </div>
+            <div class="form-group mb-4">
+                <label asp-for="Email" class="form-label">Email Address</label>
+                <input asp-for="Email" type="email" class="form-control-custom" placeholder="john@nsbm.ac.lk" required />
+                <span asp-validation-for="Email" class="text-danger" style="font-size: 12px;"></span>
+            </div>
 
-                <div class="form-group mb-3">
-                    <label asp-for="Department" class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Department</label>
-                    <input asp-for="Department" class="form-control-custom" placeholder="e.g. Computing" />
-                    <span asp-validation-for="Department" class="text-danger" style="font-size: 12px;"></span>
-                </div>
-
-                <div class="form-group mb-3" id="StudentIdContainer" style="display: none;">
-                    <label asp-for="StudentId" class="form-label" style="color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase;">Student ID</label>
-                    <input asp-for="StudentId" class="form-control-custom" placeholder="e.g. CS202301" />
-                    <div style="font-size: 11px; color: var(--info); margin-top: 4px;">Format: 2 uppercase letters + 6 digits (e.g., CS202301)</div>
-                    <span asp-validation-for="StudentId" class="text-danger" style="font-size: 12px;"></span>
-                </div>
+            <div class="form-group mb-4">
+                <label asp-for="Department" class="form-label">Department</label>
+                <input asp-for="Department" class="form-control-custom" placeholder="e.g. Computing" />
+                <span asp-validation-for="Department" class="text-danger" style="font-size: 12px;"></span>
             </div>
         </div>
 
-        <div class="mt-4 pt-3 border-top" style="border-color: var(--border) !important;">
-            <button type="submit" class="btn btn-primary-custom w-100 py-2">Create User Account</button>
+        <div class="form-section mb-6">
+            <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 16px; font-size: 14px; text-transform: uppercase;">Account Settings</h3>
+            
+            <div class="form-group mb-4">
+                <label asp-for="Role" class="form-label">System Role</label>
+                <select asp-for="Role" class="form-control-custom form-select" id="RoleSelect" required>
+                    <option value="">-- Select a Role --</option>
+                    <option value="Student">Student</option>
+                    <option value="Supervisor">Supervisor</option>
+                    <option value="ModuleLeader">Module Leader</option>
+                    <option value="Admin">Admin</option>
+                </select>
+                <span asp-validation-for="Role" class="text-danger" style="font-size: 12px;"></span>
+            </div>
+
+            <div class="form-group mb-4" id="StudentIdContainer" style="display: none;">
+                <label asp-for="StudentId" class="form-label">Student ID</label>
+                <input asp-for="StudentId" class="form-control-custom" placeholder="e.g. CS202301" />
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Format: 2 uppercase letters + 6 digits (e.g., CS202301)</div>
+                <span asp-validation-for="StudentId" class="text-danger" style="font-size: 12px;"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" type="password" class="form-control-custom" placeholder="Enter a strong password" required />
+                <span asp-validation-for="Password" class="text-danger" style="font-size: 12px;"></span>
+            </div>
+
+            <div class="form-group mb-4">
+                <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control-custom" placeholder="Re-enter the password" required />
+                <span asp-validation-for="ConfirmPassword" class="text-danger" style="font-size: 12px;"></span>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px;">
+            <button type="submit" class="btn-primary" style="flex: 1;">
+                <i class="fa-solid fa-plus"></i> Create User Account
+            </button>
         </div>
     </form>
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+<script>
+    document.getElementById('RoleSelect').addEventListener('change', function() {
+        var studentIdContainer = document.getElementById('StudentIdContainer');
+        studentIdContainer.style.display = this.value === 'Student' ? 'block' : 'none';
+    });
+</script>
