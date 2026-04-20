@@ -30,5 +30,15 @@ namespace BlindMatchPAS.Controllers
             var projects = _blindReviewService.GetBlindReviewProjects();
             return View(projects);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ExpressInterest(int projectId)
+        {
+            // In a real application, this would create a Match record in the database
+            // For now, we'll just show a success message
+            TempData["Success"] = $"You have successfully expressed interest in project ID {projectId}!";
+            return RedirectToAction(nameof(BlindReview));
+        }
     }
 }
