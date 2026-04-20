@@ -1,4 +1,4 @@
-@model IEnumerable<dynamic>
+@model IEnumerable<BlindMatchPAS.Models.ProjectProposal>
 @{
     ViewData["Title"] = "Blind Review Board";
     Layout = "_Layout";
@@ -17,7 +17,7 @@
 @if (Model.Any())
 {
     <div class="project-cards-list">
-        @foreach (dynamic project in Model)
+        @foreach (var project in Model)
         {
             <div class="project-card">
                 <div class="project-card-header">
@@ -25,7 +25,7 @@
                     <span class="status-badge status-review">@project.CompatibilityScore% Match</span>
                 </div>
                 <div class="project-meta">
-                    <span class="project-date">Submitted: @project.SubmittedDate</span>
+                    <span class="project-date">Submitted: @project.SubmittedDate.ToString("dd MMM yyyy")</span>
                     <div class="area-badges">
                         @foreach (var area in project.ResearchAreas)
                         {
@@ -37,9 +37,12 @@
                     <p>@project.Abstract</p>
                 </div>
                 <div class="project-actions">
-                    <button class="btn-primary">
-                        <i class="fa-solid fa-star"></i> Express Interest
-                    </button>
+                    <form asp-action="ExpressInterest" method="post" style="display: inline;" onsubmit="disableButton(event)">
+                        <input type="hidden" name="projectId" value="@project.Id" />
+                        <button type="submit" class="btn-primary express-interest-btn">
+                            <i class="fa-solid fa-star"></i> Express Interest
+                        </button>
+                    </form>
                 </div>
             </div>
         }
@@ -54,3 +57,13 @@ else
         <a class="btn-primary" asp-controller="Supervisor" asp-action="Dashboard">Return to Dashboard</a>
     </div>
 }
+
+<script>
+    function disableButton(event) {
+        const button = event.target.querySelector('button[type="submit"]');
+        if (button) {
+            button.disabled = true;
+            button.style.opacity = '0.6';
+        }
+    }
+</script>
