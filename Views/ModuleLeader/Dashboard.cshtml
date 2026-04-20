@@ -1,29 +1,30 @@
 ﻿@{
-    ViewData["Title"] = "Dashboard";
+    ViewData["Title"] = "Module Leader Dashboard";
 }
 
-<h2>Module Leader Dashboard</h2>
-
-<div style="display:flex; gap:20px;">
-
-    <div style="border:1px solid black; padding:15px;">
-        <h3>@ViewBag.TotalProjects</h3>
-        <p>Total Projects</p>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Module Leader <span class="accent-text">Dashboard</span></h1>
+        <p class="page-subtitle">Overview of projects and supervision activities.</p>
     </div>
+</div>
 
-    <div style="border:1px solid black; padding:15px;">
-        <h3>@ViewBag.TotalMatches</h3>
-        <p>Total Matches</p>
+<!-- Stat Cards -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number">@ViewBag.TotalProjects</div>
+        <div class="stat-label">Total Projects</div>
     </div>
-
-    <div style="border:1px solid black; padding:15px;">
-        <h3>@ViewBag.PendingProjects</h3>
-        <p>Pending Projects</p>
+    <div class="stat-card">
+        <div class="stat-number" style="color:#a0aec0">@ViewBag.TotalMatches</div>
+        <div class="stat-label">Total Matches</div>
     </div>
-
-    <div style="border:1px solid black; padding:15px;">
-        <h3>@ViewBag.TotalUsers</h3>
-        <p>Total Users</p>
+    <div class="stat-card">
+        <div class="stat-number" style="color:#f59e0b">@ViewBag.PendingProjects</div>
+        <div class="stat-label">Pending Projects</div>
     </div>
-
+    <div class="stat-card">
+        <div class="stat-number" style="color:#22c55e">@ViewBag.TotalUsers</div>
+        <div class="stat-label">Total Users</div>
+    </div>
 </div>
